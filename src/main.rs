@@ -1,5 +1,6 @@
-use std::{collections::HashMap, env::args, fs::{File, exists}, io::empty, path::Path};
+use std::{collections::HashMap, env::args, fs::{File, exists}, io::{empty, stdout}, path::Path};
 
+use crossterm::{cursor, execute, terminal};
 use fuzzy_matcher::{FuzzyMatcher, skim::SkimMatcherV2};
 fn recurse_and_add_to_index(path: &Path, index: &mut HashMap<String, String>) {
     if path.is_dir() {
@@ -40,7 +41,20 @@ fn get_matching_close_folders(folder_name: &str, index: &HashMap<String, String>
 
     Some(close_matches)
 }
+fn interactive_selector(vector:&mut Vec<String>,out:&mut String){
+let mut target = stdout();
+let mut input_buffer;
+let mut 
+execute!(
+    target,
+    terminal::EnterAlternateScreen,
+    cursor::Hide
+);
+    terminal::enable_raw_mode();
+execute!()
 
+
+}
 fn set_target_folder(folder_name: &String, index: &HashMap<String, String>,target_dir: &mut String) {
     if let Some(path) = index.get(folder_name) {
         *target_dir = path.clone();
@@ -50,7 +64,6 @@ fn set_target_folder(folder_name: &String, index: &HashMap<String, String>,targe
         for key in keys {
             if key.contains(folder_name) {
                 *target_dir= index.get(key).unwrap().clone();
-                found= true;
                 break;
             }
             else {
@@ -60,7 +73,7 @@ fn set_target_folder(folder_name: &String, index: &HashMap<String, String>,targe
         
     }
 }
-fn main() ->u8{
+fn main(){
     let mut index= HashMap::new();
     let mut file:File;
     let main_path= Path::new("$HOME");
@@ -104,5 +117,5 @@ if target_dir.is_empty() {
     // Here you can add code to open the folder using the appropriate command for your OS
 
 
-    
+}    
 }
